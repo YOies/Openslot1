@@ -1,0 +1,71 @@
+while task.wait(.1 ) do 
+     if StartOpenSlot1 == true then 
+local valueToCheck = game:GetService("Players").LocalPlayer.ReplicatedData.innates["1"].Value
+local matched = false
+
+for i, v in pairs(innates) do
+    if valueToCheck == v then
+        matched = true
+        function SendMessageEMBED(url, embed)
+            local http = game:GetService("HttpService")
+            local headers = {
+                ["Content-Type"] = "application/json"
+            }
+            local data = {
+                ["embeds"] = {
+                    {
+                        ["title"] = embed.title,
+                        ["description"] = embed.description,
+                        ["color"] = embed.color,
+                        ["fields"] = embed.fields,
+                    }
+                }
+            }
+            local body = http:JSONEncode(data)
+            request({
+                Url = url,
+                Method = "POST",
+                Headers = headers,
+                Body = body
+            })
+        end
+        
+        local webhookUrl = getgenv().WebhooKURL
+        local thumbsDownEmoji = utf8.char(0x1F44E)
+        
+        
+        
+        local embed = {
+            ["title"] = "Innates Notify.",
+            ["description"] = game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name,
+            ["color"] = 65280,
+            ["fields"] = {
+                {
+                    ["name"] = "INNATES NAME [ SLOT 1 ]:",
+                    ["value"] =  valueToCheck,
+                },
+            }
+        }
+        
+        
+        
+        SendMessageEMBED(webhookUrl, embed)
+        break
+    end
+end
+
+if not matched then
+    local args = {
+        [1] = 1
+    }
+    
+    game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Server"):WaitForChild("Data"):WaitForChild("InnateSpin"):InvokeServer(unpack(args))
+    
+end
+
+ 
+else
+    wait()
+    break
+end
+end 
